@@ -50,7 +50,7 @@
             justify-content: center;
             align-items: center;
             gap: 25px;
-            height: 100px;
+            height: 150px; /* Increased height for movement space */
             position: relative;
         }
 
@@ -64,10 +64,19 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 8px 15px rgba(255, 77, 109, 0.3);
-            transition: all 0.2s ease; /* Smoother movement */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        #yesBtn { animation: heartbeat 1.2s infinite; z-index: 11; }
+        #yesBtn { 
+            animation: heartbeat 1.2s infinite; 
+            z-index: 5;
+            position: relative;
+        }
+
+        #noBtn {
+            position: relative;
+            z-index: 6; /* Stays above/beside but never behind */
+        }
 
         @keyframes heartbeat {
             0% { transform: scale(1); }
@@ -77,7 +86,6 @@
             100% { transform: scale(1); }
         }
 
-        /* Success State */
         #success-page { display: none; }
         
         .celebration-img {
@@ -129,7 +137,7 @@
         
         <div class="btn-container">
             <button id="yesBtn" class="btn" onclick="celebrate()">Yes!</button>
-            <button id="noBtn" class="btn" onmouseover="moveSmallDist()" onclick="moveSmallDist()">No</button>
+            <button id="noBtn" class="btn" onmouseover="dodge()" onclick="dodge()">No</button>
         </div>
     </div>
 
@@ -143,22 +151,23 @@
         </div>
 
         <p style="font-size: 1.2rem; color: #333; margin: 5px 0;"><b>Rachana, you're officially mine! ❤️</b></p>
-        <p class="funny-line">Disclaimer: Clicking "Yes" entered you into a lifelong contract of putting up with me. No exit strategy available! 😂</p>
+        <p class="funny-line">No exit strategy available! You're stuck with me. 😂</p>
     </div>
 
     <script>
         const music = document.getElementById('bgMusic');
+        const noBtn = document.getElementById('noBtn');
 
-        // New Logic: Move only a small distance
-        function moveSmallDist() {
-            const btn = document.getElementById('noBtn');
-            const offset = 80; // How many pixels it moves
+        // Logic: Move in a circle around the current spot so it stays near YES
+        function dodge() {
+            // It will move to a random angle but keep a distance of 100-150px
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 120 + Math.random() * 50;
             
-            // Generate a random small movement
-            let newX = (Math.random() - 0.5) * offset * 3;
-            let newY = (Math.random() - 0.5) * offset * 3;
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
             
-            btn.style.transform = `translate(${newX}px, ${newY}px)`;
+            noBtn.style.transform = `translate(${x}px, ${y}px)`;
         }
 
         function celebrate() {
